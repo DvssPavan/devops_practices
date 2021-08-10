@@ -1,4 +1,5 @@
 from jira import JIRA
+import sys
 
 # Project Id for Documentation
 documentationId = '10807'
@@ -11,15 +12,6 @@ issueTypes = {
     'Retail Release': '10402',
     'Gateway Adapter Release': '10601'
 }
-
-# Demo/Example Information
-summary = 'A Test Release Gateway Adapter'
-releaseDate = '2021-08-26' # need the date value to be entered in YYYY-MM-DD format.
-releaseLabel = 'https:/gatway/Adapter'
-perforcePath = 'Drivers/Memphis'
-customerVersionNumber = '1.0.0.2'
-standAloneVersionNumber = '1.0.0.3'
-wireframesURL='https://'
 
 
 # Login Class for logging into the User Account/Profile
@@ -59,8 +51,8 @@ class DocTask:
     '''
     @return: Creates and returns the Gateway Adapter Doc Task
     '''
-    def createDocTask_GatewayAdapter(self, releaseLabel, perforcePath, standAloneVersionNumber, wireframesURL):
-        docTaskDetails = self.taskInfo.getDetails_GatewayAdapter(releaseLabel, perforcePath, standAloneVersionNumber, wireframesURL)
+    def createDocTask_GatewayAdapter(self, releaseLabel, perforcePath, standAloneVersionNumber):
+        docTaskDetails = self.taskInfo.getDetails_GatewayAdapter(releaseLabel, perforcePath, standAloneVersionNumber)
         return self.userProfile.create_issue(fields=docTaskDetails)
 
 # TaskInfo Class for getting the details of the required fields of the Doc Task
@@ -98,7 +90,7 @@ class TaskInfo:
     '''
     @return: Returns the Details of the Gateway Adapter Doc Task
     '''
-    def getDetails_GatewayAdapter(self, releaseLabel, perforcePath, standAloneVersionNumber, wireframesURL):
+    def getDetails_GatewayAdapter(self, releaseLabel, perforcePath, standAloneVersionNumber):
         return {
             'project': {'id': self.projectId},
             'summary': self.summary,
@@ -106,35 +98,52 @@ class TaskInfo:
             'customfield_13942': self.releaseDate,
             'customfield_13941': releaseLabel,
             'customfield_13944': perforcePath,
-            'customfield_15002': standAloneVersionNumber,
-            'customfield_15004': wireframesURL
+            'customfield_15002': standAloneVersionNumber
         }
 
 
 # Login to the account with username and password
-userName = input('Enter User name:\n')
-password = input('Enter password:\n')
+userName = sys.argv[1]
+password = sys.argv[2]
 
 login = Login(userName, password)
 profile = login.connect()
 
-# print(profile)
+issueType = sys.argv[3]
+issueType = issueType.strip()
 
-# exampleDocTaskIssue = profile.issue('DOC-5502')
-# print(exampleDocTaskIssue)
-# print(exampleDocTaskIssue.fields.summary)
+if issueType == 'OEM Release' or issueType == 'OEM':
+    summary = sys.argv[4]
+    releaseDate = sys.argv[5] # need the date value to be entered in YYYY-MM-DD format.
+    releaseLabel = sys.argv[6]
+    perforcePath = sys.argv[7]
+    customerVersionNumber = sys.argv[8]
 
-# Create OEM Doc Task:
-# docTask = DocTask(documentationId, summary, issueTypes['OEM Release'], releaseDate, profile)
-# newDocIssue = docTask.createDocTask_OEM(releaseLabel, perforcePath, customerVersionNumber)
+    docTask = DocTask(documentationId, summary, issueTypes['OEM Release'], releaseDate, profile)
+    newDocIssue = docTask.createDocTask_OEM(releaseLabel, perforcePath, customerVersionNumber)
 
-# Create Retail Doc Task:
-# docTask = DocTask(documentationId, summary, issueTypes['Retail Release'], releaseDate, profile)
-# newDocIssue = docTask.createDocTask_Retail(releaseLabel, perforcePath)
+    print(newDocIssue)
 
-# Create Gateway Adapter Doc Task:
-# docTask = DocTask(documentationId, summary, issueTypes['Gateway Adapter Release'], releaseDate, profile)
-# newDocIssue = docTask.createDocTask_GatewayAdapter(releaseLabel, perforcePath, standAloneVersionNumber, wireframesURL)
+if issueType == 'Retail Release' or issueType == 'Retail':
+    summary = sys.argv[4]
+    releaseDate = sys.argv[5] # need the date value to be entered in YYYY-MM-DD format.
+    releaseLabel = sys.argv[6]
+    perforcePath = sys.argv[7]
 
-# print(newDocIssue)
-# print(newDocIssue.fields.summary)
+    docTask = DocTask(documentationId, summary, issueTypes['Retail Release'], releaseDate, profile)
+    newDocIssue = docTask.createDocTask_Retail(releaseLabel, perforcePath)
+
+    print(newDocIssue)
+
+if issueType == 'Gateway Adapter Release' or issueType == 'Gateway Adapter':
+    summary = sys.argv[4]
+    releaseDate = sys.argv[5] # need the date value to be entered in YYYY-MM-DD format.
+    releaseLabel = sys.argv[6]
+    perforcePath = sys.argv[7]
+    standAloneVersionNumber = sys.argv[8]
+    # wireframesURL = sys.argv[9]
+
+    docTask = DocTask(documentationId, summary, issueTypes['Gateway Adapter Release'], releaseDate, profile)
+    newDocIssue = docTask.createDocTask_GatewayAdapter(releaseLabel, perforcePath, standAloneVersionNumber)
+    
+    print(newDocIssue)
