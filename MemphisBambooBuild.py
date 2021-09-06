@@ -44,8 +44,8 @@ class BambooBuildPlans:
 
     def build(self):
         # Ask user to login with Bigsight credentials and trigger the build plan
-        atlassian_user = input("Enter user name :")
-        atlassian_password = input("Enter password: ")
+        atlassian_user = sys.argv[1]
+        atlassian_password = sys.argv[2]
 
         user_pass = atlassian_user + ':' + atlassian_password
         base_64_val = base64.b64encode(user_pass.encode()).decode()
