@@ -12,7 +12,7 @@
                 "inConfiguration":"64 msi"
             },
             "Linux":{
-                "inCompiler":"",
+                "inCompiler":"1",
                 "inPlatform":"",
                 "inConfiguration":""
             },
