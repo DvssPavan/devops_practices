@@ -202,7 +202,7 @@ class BambooBuildPlans:
         if status == "Failed":
             raise Exception('The Plan is Failed. Please Check it and re-solve the errors if any.')
         elif status == "Unknown" and lifeCycleState == "NotBuilt":
-            raise Exception('The plan has got stopped in the middle of the Building process. Please re-run it again')
+            raise Exception('The plan has got stopped in the middle of the process. Re-run the plan.')
         elif status == "Successful":
             print("Plan has got Successfully Built.")
 
