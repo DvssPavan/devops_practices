@@ -1,11 +1,16 @@
-# Memphis Bamboo Build Plans 1.0
-# Author: ShubhamS
-"""This module is responsible for triggering bamboo build plans for driver/adapter.
+# Memphis Bamboo Build Plans for Code Signing DLLs/EXEs/Installers 1.0
+# Author: rkundeti
+"""This module is responsible for triggering bamboo build plans for Code Signing.
 
-This triggers the bamboo build plan.
+This triggers the bamboo build plan for Code Signing DLLs/EXEs/Installers.
 
   Typical usage example:
-  $ python BambooBuildPlans.py
+  $ python MemphisBambooBuild.py $(Username) $(password)
+  
+  Here, Username and password are your Bigsight Credentials.
+  Note: - The bigsight credentials should belong to the user who has the permission
+          to start a Signed Installer Plan (Example: - LinkedIn ODBC IBM release package)
+
   And follow the on-screen instructions.
 """
 import json
@@ -182,15 +187,24 @@ class BambooBuildPlans:
         else:
             print("OEM plan has started and it's in progress")
         status = ""
+        lifeCycleState = ""
         while True:
             response = requests.request("GET", url, data=payload, headers=headers)
             root = et.fromstring(response.content)
+            lifeCycleState = root.attrib['lifeCycleState']
             for buildState in root.iter('buildState'):
                 status = buildState.text
             if status != "Unknown":
                 break
+            elif status == "Unknown" and lifeCycleState == 'NotBuilt':
+                break
             time.sleep(60)
-        print("Bamboo Plan Execution Finished with result: "+ status)
+        if status == "Failed":
+            raise Exception('The Plan is Failed. Please Check it and re-solve the errors if any.')
+        elif status == "Unknown" and lifeCycleState == "NotBuilt":
+            raise Exception('The plan has got stopped in the middle of the Building process. Please re-run it again')
+        elif status == "Successful":
+            print("Plan has got Successfully Built.")
 
 
 def run_bamboo_adapter_build(input_args: dict):
