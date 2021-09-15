@@ -21,9 +21,6 @@ class ScalabilityTestRunner:
 
         p = subprocess.run(['ExampleBatchFileForST.bat'], capture_output=True)
 
-        print(p.stdout.decode())
-        print(p.stderr.decode())
-
         # Check the status of the Thread Files (Excel Files)
         if self.checkStatusOfThreadsFiles(20, 30):
             print('Done')
@@ -77,8 +74,7 @@ class ScalabilityTestRunner:
                 for threadNumber in range(1, n_threads+1):
                     threadFilePath = cycleFoldarPath + "\\Thread_" + str(threadNumber) + ".csv"
                     if os.path.isfile(threadFilePath):
-                        fileSize = math.ceil(os.stat(threadFilePath).st_size / 1000)    # Convert bytes to KBs
-                        print("Cycle : " + str(cycleNumber) + " | Thread : " + str(threadNumber) + " | Size : " + str(fileSize) + " KB")
+                        fileSize = math.ceil(os.stat(threadFilePath).st_size / 1000) # Convert bytes to KBs
                         if fileSize <= 1:
                             status = False
                             break
@@ -131,13 +127,3 @@ class ScalabilityTestRunner:
             querynumber += 1
 
         return selectQueries
-
-# SCALABILITY_TESTER_PATH = "C:\\Users\\rkundeti\\Desktop\\ScalabilityTester.exe"
-# DSN = "dsn=Microsoft SFMC"
-# OUTPUT_DIRECTORY = "C:\\Users\\rkundeti\\Desktop\\"
-
-# packageLocation = "C:\\Users\\rkundeti\\Documents\\QuickBooks\\SFMC-1011-package\\new_pack_CL_1\\SFMarketingCloud_w2012r2_vs2013_64\\"
-
-# scalabilityTestRunner = ScalabilityTestRunner(SCALABILITY_TESTER_PATH, packageLocation, OUTPUT_DIRECTORY, DSN)
-
-# scalabilityTestRunner.start()
