@@ -1,0 +1,27 @@
+{
+    "inBambooConfigs": {
+        "inProjectKey":"SGINOMEM",
+        "inDriverLabel":"LinkedIn_ODBC_1.6.34.1009",
+        "inCoreLabel":"Memphis_Core_ODBC_1.6.34.1039",
+        "inSENLabel":"SimbaEngineSDK_10.1.20.1180_Internal",
+        "inDriverBrand": "Simba",
+        "inBuildConfigs":{
+            "Windows":{
+                "inCompiler":"vs2013",
+                "inPlatform":"w2012r2",
+                "inConfiguration":"64 msi"
+            },
+            "Linux":{
+                "inCompiler":"",
+                "inPlatform":"",
+                "inConfiguration":""
+            },
+            "OSX":{
+                "inCompiler":"",
+                "inPlatform":"",
+                "inConfiguration":""
+            }
+        },
+        "inBranchName": "LinkedIn 1.6"
+    }
+}
