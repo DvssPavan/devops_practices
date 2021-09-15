@@ -68,7 +68,7 @@ class BambooBuildPlans:
                 branch_key = branch_info['key']
                 print(branch_key)
                 bamboo.execute_build(branch_key, **self.get_params())
-                print('Bamboo build is started for ' + self.branch_name.split(' ')[0] + ' adapter in windows platform')
+                print('Bamboo build is started for ' + self.branch_name.split(' ')[0] + ' adapter/driver in windows platform')
                 self.open_browser_and_check_status(branch_info, branch_key, base_64_val)
                 return True
             if len(self.linux_build_configs) > 2:
@@ -76,7 +76,7 @@ class BambooBuildPlans:
                                                  self.branch_name)
                 branch_key = branch_info['key']
                 bamboo.execute_build(branch_key, **self.get_params())
-                print('Bamboo build is started for ' + self.branch_name.split(' ')[0] + ' adapter in linux platform')
+                print('Bamboo build is started for ' + self.branch_name.split(' ')[0] + ' adapter/driver in linux platform')
                 self.open_browser_and_check_status(branch_info, branch_key, base_64_val)
                 return True
             if len(self.osx_build_configs) > 2:
@@ -84,7 +84,7 @@ class BambooBuildPlans:
                                                  self.branch_name)
                 branch_key = branch_info['key']
                 bamboo.execute_build(branch_key, **self.get_params())
-                print('Bamboo build is started for ' + self.branch_name.split(' ')[0] + ' adapter in osx platform')
+                print('Bamboo build is started for ' + self.branch_name.split(' ')[0] + ' adapter/driver in osx platform')
                 self.open_browser_and_check_status(branch_info, branch_key, base_64_val)
                 return True
         else:
