@@ -1,4 +1,4 @@
-# MetaData & INIFile Test Automated
+# Scalability Test Automated
 
 ## Requirements:
   1. [Python](https://www.python.org/downloads/)
@@ -21,12 +21,13 @@
       Perform below mentioned steps for all the Registry folders given above.
       - Go to Permissions by right clicking on them
       - Allow `Full Control` for the current user & ALL APPLICATION PACKAGES
+        
         ![img.png](img.png)
 
 ## Input:
   1. `Username`       - Simba/MagSW Username
   2. `Password`       - Simba/MagSW Password
-  3. `BasePath`       - Current Working Directory Path (aspecially required to execute on Azure)
+  3. `BasePath`       - Current Working Directory Path (especially required to execute on Azure)
   4. `InputFileName`  - Name of Input File. i.e input.json (Extension must be .json)
         - Find more details about InputFile below
             1. `SourcePath` - Source Path of the package. Make sure to Map a network drive 
