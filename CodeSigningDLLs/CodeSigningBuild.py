@@ -27,7 +27,7 @@ import webbrowser
 
 from atlassian import Bamboo
 
-
+"""Class for starting the Code Siging Plans"""
 class BambooBuildPlans:
 
     def __init__(self, input_args: dict):
@@ -48,6 +48,7 @@ class BambooBuildPlans:
                                  input_args['inBambooConfigs']['inBuildConfigs']['OSX']['inConfiguration']
         self.branch_name = input_args['inBambooConfigs']['inBranchName']
 
+    """Triggers the Code Signing Plan"""
     def build(self):
         # Ask user to login with Bigsight credentials and trigger the build plan
         atlassian_user = sys.argv[1]
@@ -91,6 +92,7 @@ class BambooBuildPlans:
             print(self.project + ' project not found. Please verify the project key.')
             return False
 
+    """Returns the plan/project key"""
     def get_plan_key(self, url, base_64_user_pass, build_configs):
         url += '?expand=plans'
         payload = ""
@@ -123,7 +125,7 @@ class BambooBuildPlans:
             tree = response.json()
 
 
-
+    """Returns the project/plan URL"""
     def get_project_url(self, base_64_user_pass):
         url = "http://bergamot3.lakes.ad:8085/rest/api/latest/project/"
         url += self.project       # append the project key behind the url
@@ -138,6 +140,7 @@ class BambooBuildPlans:
             url = None
         return url
 
+    "Prepares and Returns the params mentioned in the input json file"
     def get_params(self):
         params = {
             "BOOSTER_LABEL": "__head__",
@@ -157,6 +160,7 @@ class BambooBuildPlans:
         }
         return params
 
+    """Opens the plan in the Browser and also checks the plan's status"""
     def open_browser_and_check_status(self, branch_info, branch_key, base_64_val):
         if 'latestResult' not in branch_info:
             firstBuildPlan = 'http://bergamot3.lakes.ad:8085/rest/api/latest/result/' + branch_key + '-0'
@@ -167,12 +171,14 @@ class BambooBuildPlans:
             self.check_plan_status(branch_info['latestResult']['link']['href'].split("/")[-1],
                                    base_64_val)
 
+    """Opens the Plan in the browser"""
     def open_browser(self, url: str):
         job_id = url.split("-")[-1]
         url = url[0: len(url) - len(job_id)] + str(int(job_id) + 1)
         url = url.replace('rest/api/latest/result', 'browse')
         webbrowser.open(url, new=2)
 
+    """Checks the Plan's Status (Failed, Notbuilt or Succesful)"""
     def check_plan_status(self, build_key, base_64_user_pass):
         url = "http://bergamot3.lakes.ad:8085/rest/api/latest/result/" + build_key
         job_id = url.split("-")[-1]
@@ -206,7 +212,7 @@ class BambooBuildPlans:
         elif status == "Successful":
             print("Plan has got Successfully Built.")
 
-
+"""Saves the data given in the input json file and triggers the code signing plan"""
 def run_bamboo_adapter_build(input_args: dict):
     print("Building driver/adapter on bamboo...BEGIN")
     bamboo_build = BambooBuildPlans(input_args)
