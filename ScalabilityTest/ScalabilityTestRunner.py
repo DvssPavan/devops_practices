@@ -3,6 +3,7 @@ import math
 import subprocess
 import xml.etree.ElementTree as ET
 
+
 class ScalabilityTestRunner:
     def __init__(self, scalabilityTesterPath, packageLocation, outputDir, dsn):
         self.scalabilityTesterPath = scalabilityTesterPath
@@ -10,16 +11,16 @@ class ScalabilityTestRunner:
         self.outputDir = outputDir
         self.dsn = dsn
 
-    def start(self):
+    def start(self, inBasePath: str):
         # Prepare a batch script
         script = self.prepareBatchScript(self.getSelectQueries(1))
 
         # Create the Batch file
-        exampleBatFile = open(r'.\\ExampleBatchFileForST.bat', 'w+')
+        exampleBatFile = open(os.path.join(inBasePath, 'ExampleBatchFileForST.bat'), 'w+')
         exampleBatFile.write(script)
         exampleBatFile.close()
 
-        p = subprocess.run(['ExampleBatchFileForST.bat'], capture_output=True)
+        p = subprocess.run([os.path.join(inBasePath, 'ExampleBatchFileForST.bat')], capture_output=True)
 
         # Check the status of the Thread Files (Excel Files)
         if self.checkStatusOfThreadsFiles(20, 30):
@@ -61,7 +62,7 @@ class ScalabilityTestRunner:
 
         script += ":end\n"
         script += "echo \"Done.\"\n"
-        script += "pause\n"
+        # script += "pause\n"
 
         return script
 
@@ -71,10 +72,10 @@ class ScalabilityTestRunner:
         for cycleNumber in range(0, n_cycles):
             cycleFoldarPath = self.outputDir + str(cycleNumber)
             if os.path.isdir(cycleFoldarPath):
-                for threadNumber in range(1, n_threads+1):
+                for threadNumber in range(1, n_threads + 1):
                     threadFilePath = cycleFoldarPath + "\\Thread_" + str(threadNumber) + ".csv"
                     if os.path.isfile(threadFilePath):
-                        fileSize = math.ceil(os.stat(threadFilePath).st_size / 1000) # Convert bytes to KBs
+                        fileSize = math.ceil(os.stat(threadFilePath).st_size / 1000)  # Convert bytes to KBs
                         if fileSize <= 1:
                             status = False
                             break
@@ -86,21 +87,22 @@ class ScalabilityTestRunner:
     def getSelectQueries(self, n_queries):
         # Get required test sets from the package location
         SQL_TestSets = self.getSQLTestSets()
-        
+
         # Get the required amount of the test sets from the test sets
         selectQueries = self.getQueries(SQL_TestSets, n_queries)
 
         return selectQueries
 
     def getSQLTestSets(self):
-        testSets_Dir = self.packageLocation + "Touchstone\\specific\\TestDefinitions\\SQL\\TestSets"
+        testSets_Dir = self.packageLocation + "\\Touchstone\\specific\\TestDefinitions\\SQL\\TestSets"
 
-        SQL_TestSets = []    # The Test Sets such as AND_OR, JOIN, LIKE, PASSDOWN, SELECT_TOP, GROUP_BY, ORDER_BY
+        SQL_TestSets = []  # The Test Sets such as AND_OR, JOIN, LIKE, PASSDOWN, SELECT_TOP, GROUP_BY, ORDER_BY
 
         for filename in os.listdir(testSets_Dir):
-            f = os.path.join(testSets_Dir, filename)
-            if os.path.isfile(f):
-                SQL_TestSets.append(str(f))
+            if filename.endswith('.xml') and filename.startswith('SQL_'):
+                f = os.path.join(testSets_Dir, filename)
+                if os.path.isfile(f):
+                    SQL_TestSets.append(str(f))
 
         # Replace all the testSetFilePaths with the xml parsed roots which is in this case a <TestSet>
         for fileIndex, testSetFilePath in enumerate(SQL_TestSets):
@@ -109,9 +111,9 @@ class ScalabilityTestRunner:
             SQL_TestSets[fileIndex] = testSet
 
         return SQL_TestSets
-    
+
     def getQueries(self, SQL_TestSets, n_queries):
-        selectQueries = []     # should contain 20 select queries for Scalability Test.
+        selectQueries = []  # should contain 20 select queries for Scalability Test.
 
         # Pick the 20 queries required for the Scalibility Test.
         no_of_queries = 0
