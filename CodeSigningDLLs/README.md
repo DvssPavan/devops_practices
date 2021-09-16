@@ -6,11 +6,11 @@ Pre-requisites:
    - python -m pip install atlassian-python-api
    - python -m pip install requests
 The following files are available:
-1. MemphisBambooBuild: Python file that will read input from user_input.json file and triggers bamboo Code Signing plans.
+1. CodeSigningBuild: Python file that will read input from user_input.json file and triggers bamboo Code Signing plans.
 2. user_input: Json file that user can use to input Driver label, Core label, SEN label, Driver branch, Driver brand and Build Configurations for Windows/Linux/OSX.
 ### Usage
 Assuming user_input.json has been modified accordingly (see Parameters section), please run:
-$ python MemphisBambooBuild.py <simbaUsername> <simbaPassword> <cwd>
+$ python CodeSigningBuild.py <simbaUsername> <simbaPassword> <cwd>
 ### Command line arguments
 - simbaUsername: Simba Username (without simba\).
 - simbaPassword: Simba Password.
