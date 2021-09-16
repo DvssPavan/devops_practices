@@ -41,12 +41,8 @@
      
 
 ## Usage
-- To Perform MetaData Test
+- To Perform Scalability Test
      ```bash
-     python MetaTestRunner.py username password C:fakepath input.json
-     ```
-- To Perform INI File Test
-     ```bash
-     python INIFileTestRunner.py username password C:fakepath input.json
+     python ScalabilityTestLauncher.py username password C:fakepath input.json
      ```
   
