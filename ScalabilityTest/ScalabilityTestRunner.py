@@ -1,5 +1,7 @@
 import os
+import sys
 import math
+import json
 import subprocess
 import xml.etree.ElementTree as ET
 
@@ -10,31 +12,46 @@ class ScalabilityTestRunner:
         self.packageLocation = packageLocation
         self.outputDir = outputDir
         self.dsn = dsn
+        self.scalabilityTestDetails = self.parseScalabilityTestDetails(sys.argv[5])
 
     def start(self, inBasePath: str):
         # Prepare a batch script
-        script = self.prepareBatchScript(self.getSelectQueries(1))
+        n_queries = self.scalabilityTestDetails["NumberOfQueries"]
+        n_threads = self.scalabilityTestDetails["ThreadCount"]
+        script = self.prepareBatchScript(self.getSelectQueries(n_queries), n_threads)
+
+        batchScriptPath = os.path.join(inBasePath, 'ExampleBatchFileForST.bat')
 
         # Create the Batch file
-        exampleBatFile = open(os.path.join(inBasePath, 'ExampleBatchFileForST.bat'), 'w+')
+        exampleBatFile = open(batchScriptPath, 'w+')
         exampleBatFile.write(script)
         exampleBatFile.close()
 
-        p = subprocess.run([os.path.join(inBasePath, 'ExampleBatchFileForST.bat')], capture_output=True)
+        # Start the execution of the Batch File.
+        p = subprocess.run([batchScriptPath], capture_output=True)
+
+        # Delete the batch file after it's execution is completed.
+        os.remove(batchScriptPath)
 
         # Check the status of the Thread Files (Excel Files)
-        if self.checkStatusOfThreadsFiles(20, 30):
+        if self.checkStatusOfThreadsFiles(n_queries, n_threads):
             print('Done')
         else:
             print('Check the Thread Files generated')
 
-    def prepareBatchScript(self, selectQueries):
+    def prepareBatchScript(self, selectQueries, threadCount):
         SCALABILITY_TESTER_PATH = self.scalabilityTesterPath
         TestNo = 0
-        TEST_TIME_IN_SECONDS = 3400
-        DSN = self.dsn
+        TEST_TIME_IN_SECONDS = self.scalabilityTestDetails["TestTimeInSeconds"]
         OUTPUT_DIRECTORY = self.outputDir
-        THREAD_COUNT = 30
+        THREAD_COUNT = threadCount
+        
+        DSN = ""
+        isConnStringGiven = self.scalabilityTestDetails["ConnectionConfig"]["provided"]
+        if isConnStringGiven:
+            DSN = self.scalabilityTestDetails["ConnectionConfig"]["ConnString"]
+        else:
+            DSN = self.dsn
 
         script = "@echo off\n"
         script += "cls\n\n"
@@ -75,7 +92,7 @@ class ScalabilityTestRunner:
                 for threadNumber in range(1, n_threads + 1):
                     threadFilePath = cycleFoldarPath + "\\Thread_" + str(threadNumber) + ".csv"
                     if os.path.isfile(threadFilePath):
-                        fileSize = math.ceil(os.stat(threadFilePath).st_size / 1000)  # Convert bytes to KBs
+                        fileSize = math.ceil(os.stat(threadFilePath).st_size / 1000)
                         if fileSize <= 1:
                             status = False
                             break
@@ -129,3 +146,10 @@ class ScalabilityTestRunner:
             querynumber += 1
 
         return selectQueries
+
+    def parseScalabilityTestDetails(self, scalabilityTestConfigFile: str):
+        if os.path.exists(scalabilityTestConfigFile):
+            with open(scalabilityTestConfigFile) as file:
+                return json.load(file)["ScalabilityTestConfig"]
+        print(f"Error: Given {scalabilityTestConfigFile} is not found\n")
+        sys.exit(1)
