@@ -9,7 +9,10 @@ from RemoteConnection import RemoteConnection
 from GenUtility import TimeOutLevel, isNoneOrEmpty, writeInFile
 from ScalabilityTestRunner import ScalabilityTestRunner
 
-
+"""
+    The Launcing part of the Scalability Test with required user credentials
+    which are required for the package setup.
+"""
 def main(inUserName: str, inPassword: str, inBasePath: str, inputFileName: str):
     if isNoneOrEmpty(inUserName, inPassword, inBasePath, inputFileName):
         print('Error: Invalid Parameter')

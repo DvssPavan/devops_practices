@@ -5,7 +5,7 @@ import json
 import subprocess
 import xml.etree.ElementTree as ET
 
-
+"""Class for storing the details required details and starting the Scalability Tester"""
 class ScalabilityTestRunner:
     def __init__(self, scalabilityTesterPath, packageLocation, outputDir, dsn):
         self.scalabilityTesterPath = scalabilityTesterPath
@@ -14,6 +14,7 @@ class ScalabilityTestRunner:
         self.dsn = dsn
         self.scalabilityTestDetails = self.parseScalabilityTestDetails(sys.argv[5])
 
+    """Starts the Scalability Test"""
     def start(self, inBasePath: str):
         # Prepare a batch script
         n_queries = self.scalabilityTestDetails["NumberOfQueries"]
@@ -39,6 +40,7 @@ class ScalabilityTestRunner:
         else:
             print('Check the Thread Files generated')
 
+    """Prepares the batch script file"""
     def prepareBatchScript(self, selectQueries, threadCount):
         SCALABILITY_TESTER_PATH = self.scalabilityTesterPath
         TestNo = 0
@@ -83,6 +85,7 @@ class ScalabilityTestRunner:
 
         return script
 
+    """Checks the status the thread files generated in the output Dir"""
     def checkStatusOfThreadsFiles(self, n_cycles, n_threads):
         status = True
 
@@ -101,6 +104,7 @@ class ScalabilityTestRunner:
 
         return status
 
+    """Returns the list of the select queries"""
     def getSelectQueries(self, n_queries):
         # Get required test sets from the package location
         SQL_TestSets = self.getSQLTestSets()
@@ -110,6 +114,7 @@ class ScalabilityTestRunner:
 
         return selectQueries
 
+    """Returns the XML roots of the SQL Testset files"""
     def getSQLTestSets(self):
         testSets_Dir = self.packageLocation + "\\Touchstone\\specific\\TestDefinitions\\SQL\\TestSets"
 
@@ -129,6 +134,7 @@ class ScalabilityTestRunner:
 
         return SQL_TestSets
 
+    """Picks the mentioned number of queries from the given the SQL Testsets"""
     def getQueries(self, SQL_TestSets, n_queries):
         selectQueries = []  # should contain 20 select queries for Scalability Test.
 
@@ -147,6 +153,7 @@ class ScalabilityTestRunner:
 
         return selectQueries
 
+    """Parses and returns the details of the Scalability tester from the scalabilityTestConfig.json file"""
     def parseScalabilityTestDetails(self, scalabilityTestConfigFile: str):
         if os.path.exists(scalabilityTestConfigFile):
             with open(scalabilityTestConfigFile) as file:
