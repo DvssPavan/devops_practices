@@ -45,8 +45,8 @@
             2. `TestTimeInSeconds` - Time in Seconds for the Test (Integer)
             3. `NumberOfQueries` - Number of select Queries to be executed (Integer)
             4. `ConnectionConfig` - Contains the configuration details of Connection string.
-                a. `ConnString` - Optional Connection String for the Driver in case if you haven't the provided the detials under the "Plugin" in input.json file (String)
-                b. `provided` - Set true if provided a Connection String else set to false.
+                   1. `ConnString` - Optional Connection String for the Driver in case if you haven't the provided the detials under the "Plugin" in input.json file (String)
+                   2. `provided` - Set true if provided a Connection String else set to false.
 
 ## Usage
 - To Perform Scalability Test
