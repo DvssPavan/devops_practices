@@ -39,7 +39,7 @@
             5. `Brand` - Plugin's Brand
             6. `WaitForUserToSetupDSN` - Set true to manually set up the Data Source Configurations. **Do not set it to true while running from Azure.** It would surely fail as Azure does not work in interactive environment.
             7. `DataSourceConfiguration` - Data Source Configuration in key value pair
-  5. `ScalabilityTestConfigFilename` - Name of the Config file which has the information for Scalability Testing i.e, scalabilityTestConfig.json (Extension must be .json)
+  5. `ScalabilityTestConfigFilename` - Name(if in same Directory as the ScalabilityTestLauncher.py or prepend the path in which it is present) of the Config file which has the information for Scalability Testing i.e, scalabilityTestConfig.json (Extension must be .json)
         - Find more details about this Config file below   
             1. `ThreadCount` - Number of Threads required to be mentioned in the Script (Integer).
             2. `TestTimeInSeconds` - Time in Seconds for the Test (Integer)
